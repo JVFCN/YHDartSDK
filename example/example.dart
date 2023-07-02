@@ -2,21 +2,37 @@ import 'dart:async';
 import 'dart:io';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
-import '../openapi.dart';
-import '../subscription.dart';
+import 'package:dotenv/dotenv.dart';
+import '../lib/openapi.dart';
+import '../lib/subscription.dart';
+
+var env = DotEnv()..load(["example/.env"]);
 
 Future<Response> _handlePostRequest(Request request) async {
   final requestBody = await request.readAsString();
   final subscription = Subscription();
-  final openapi = Openapi("TOKEN");
-
-  // ½ÓÊÕÆÕÍ¨ÏûÏ¢²¢Ê¹ÓÃ·¢ËÍÏûÏ¢Api
+  final openapi = Openapi(env["TOKEN"].toString());
+  // æ¥æ”¶æ™®é€šæ¶ˆæ¯
   subscription.onMessageNormal((event) {
     print('Received a normal message: $event');
-    openapi.sendMessage("3161064", "user", {"text": "Hello"});
+    openapi.sendMessage("3161064", "user", {
+      "text": "æŒ‰é’®",
+      "buttons": [
+        [
+          {"text": "æŒ‰é’®æ–‡æœ¬", "actionType": 3, "value": "è¿™æ˜¯value"}
+        ]
+      ]
+    });
   });
 
-  // ½ÓÊÕÖ¸ÁîÏûÏ¢
+  // å¤„ç†actionTypeä¸º3æ—¶çš„äº‹ä»¶
+  subscription.onButtonReportInline((event) {
+    print('Received an instruction message: $event');
+    openapi.editMessage(event["msgId"], event["recvId"], event["recvType"],
+        "text", {"text": "å·²ç¼–è¾‘"});
+  });
+
+  // æ¥æ”¶æŒ‡ä»¤æ¶ˆæ¯
   subscription.onMessageInstruction((event) {
     print('Received an instruction message: $event');
   });
@@ -26,7 +42,7 @@ Future<Response> _handlePostRequest(Request request) async {
 }
 
 void main(List<String> args) async {
-  // Æô¶¯³ÌĞò
+  // å¯åŠ¨ç¨‹åº
   final handler =
       Pipeline().addMiddleware(logRequests()).addHandler(_handlePostRequest);
   final server = await io.serve(handler, InternetAddress.anyIPv4, 7888);

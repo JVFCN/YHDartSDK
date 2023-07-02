@@ -1,8 +1,13 @@
-name: hello_world
+name: yunhu_dart
 
 environment:
   sdk: '^3.0.0'
 dependencies:
+  dotenv: ^4.1.0
   http: ^1.1.0
   shelf: ^1.4.1
   shelf_router: ^1.1.4
+version: 0.1.0
+homepage: "https://github.com/JVFCN/YHDartSDK"
+repository: "https://github.com/JVFCN/YHDartSDK"
+description: "这是一个适用于云湖(www.yhchat.com)的DartSDK"
