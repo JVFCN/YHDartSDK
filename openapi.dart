@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class Openapi {
@@ -17,8 +18,21 @@ class Openapi {
     return _sendMessage(recvId, recvType, "markdown", content);
   }
 
+  Future<http.Response> batchSendTextMessage(
+      List recvId, String recvType, String contentType, Map content) {
+    final params = {
+      "recvId": recvId,
+      "recvType": recvType,
+      "contentType": contentType,
+      "content": content
+    };
+    final headers = {'Content-Type': 'application/json'};
+    return http.post(Uri.parse('$baseUrl/bot/batch_send?token=$token'),
+        headers: headers, body: json.encode(params));
+  }
+
   Future<http.Response> _sendMessage(
-      String recvId, String recvType, String contentType, Map content) {
+      recvId, String recvType, String contentType, Map content) {
     final params = {
       "recvId": recvId,
       "recvType": recvType,
@@ -27,6 +41,21 @@ class Openapi {
     };
     final headers = {'Content-Type': 'application/json'};
     return http.post(Uri.parse('$baseUrl/bot/send?token=$token'),
+        headers: headers, body: json.encode(params));
+  }
+
+  Future<http.Response> editMessage(String msgId, String recvId,
+      String recvType, String contentType, Map content) {
+    final params = {
+      "msgId": msgId,
+      "recvId": recvId,
+      "recvType": recvType,
+      "contentType": contentType,
+      "content": content
+    };
+
+    final headers = {'Content-Type': 'application/json'};
+    return http.post(Uri.parse('$baseUrl/bot/edit?token=$token'),
         headers: headers, body: json.encode(params));
   }
 }
