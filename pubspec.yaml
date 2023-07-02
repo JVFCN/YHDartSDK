@@ -1,0 +1,8 @@
+name: hello_world
+
+environment:
+  sdk: '^3.0.0'
+dependencies:
+  http: ^1.1.0
+  shelf: ^1.4.1
+  shelf_router: ^1.1.4
