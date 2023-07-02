@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:isolate';
 
 class Subscription {
   Function(Map<dynamic, dynamic>)? onMessageNormalSubscriber;
