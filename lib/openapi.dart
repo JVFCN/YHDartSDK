@@ -7,14 +7,14 @@ class Openapi {
 
   Openapi(this.token);
 
-  Future<http.Response> sendMessage(
+  Future<http.Response> sendTextMessage(
       String recvId, String recvType, Map content) {
-    return _sendMessage(recvId, recvType, "text", content);
+    return sendMessage(recvId, recvType, "text", content);
   }
 
   Future<http.Response> sendMarkdownMessage(
       String recvId, String recvType, Map content) {
-    return _sendMessage(recvId, recvType, "markdown", content);
+    return sendMessage(recvId, recvType, "markdown", content);
   }
 
   Future<http.Response> batchSendTextMessage(
@@ -30,7 +30,7 @@ class Openapi {
         headers: headers, body: json.encode(params));
   }
 
-  Future<http.Response> _sendMessage(
+  Future<http.Response> sendMessage(
       recvId, String recvType, String contentType, Map content) {
     final params = {
       "recvId": recvId,
@@ -55,6 +55,19 @@ class Openapi {
 
     final headers = {'Content-Type': 'application/json'};
     return http.post(Uri.parse('$baseUrl/bot/edit?token=$token'),
+        headers: headers, body: json.encode(params));
+  }
+
+  Future<http.Response> SetBotBorad(
+      String recvId, String recvType, String contentType, String content) {
+    final params = {
+      "recvId": recvId,
+      "recvType": recvType,
+      "content": content,
+      "contentType": contentType
+    };
+    final headers = {'Content-Type': 'application/json'};
+    return http.post(Uri.parse('$baseUrl/bot/board?token=$token'),
         headers: headers, body: json.encode(params));
   }
 }
